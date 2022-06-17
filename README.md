@@ -5,4 +5,4 @@ Simple UIKit - calculator (in progress...)
 * Operations chain
 * Supporting any screen types
 
-<img width="405" alt="Calculate!" src="https://user-images.githubusercontent.com/61458847/174065297-0e9ec76d-0ba6-4d46-a872-509295a439b3.png">
+<img width="398" alt="calculate" src="https://user-images.githubusercontent.com/61458847/174267223-2ad2e680-3a54-4a94-93f1-84f84a83426d.png">
