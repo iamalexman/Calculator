@@ -7,8 +7,6 @@
 
 import Foundation
 
-// ARG1 + ARG2 * = SUM
-
 protocol Calculating {
 
     var summary: String { get set }
@@ -20,7 +18,6 @@ protocol Calculating {
     var error: Bool { get set }
     var hasOption: Bool { get set }
     var neg: Bool { get set }
-    static var maxLen: Int { get }
 
     mutating func cleanButtonPressed()
     mutating func calculate(firstArg: String, secondArg: String) -> Double
@@ -41,7 +38,6 @@ struct Calculator: Calculating {
     var error = false
     var hasOption = false
     var neg = false
-    static let maxLen = 8
 
     mutating func cleanButtonPressed() {
         summary = ""
@@ -57,7 +53,7 @@ struct Calculator: Calculating {
     }
 
     mutating func calculate(firstArg: String, secondArg: String) -> Double {
-        let firstNumber = Double(firstArg) ?? 0
+        let firstNumber = Double(firstArg)?.rounded() ?? 0
         let secondNumber = Double(secondArg) ?? 0
 //        firstValue = ""
 //        secondValue = ""
@@ -83,23 +79,17 @@ struct Calculator: Calculating {
     mutating func summaryButtonPressed() -> String  {
         if secondValue == "" && hasOption {
             secondValue = firstValue
-            summary = String(calculate(firstArg: firstValue, secondArg: secondValue))
+            summary = String(format: "%.8f",calculate(firstArg: firstValue, secondArg: secondValue))
         } else if secondValue != "" {
-            summary = String(calculate(firstArg: firstValue, secondArg: secondValue))
+            summary = String(format: "%.8f",calculate(firstArg: firstValue, secondArg: secondValue))
             firstValue = summary
         } else {
             summary = ""
         }
         return summary
-//        calc.summary = String(format: %.0f, calc.calculate())
     }
 
     mutating func optionButtonPressed(sign: String) {
-//        1) no args
-//        1.1) option
-//        2) 1 arg + option
-//        3) 2 args
-//        4) 2 args 2 options
         hasOption = true
         if option == "" {
             option = sign
@@ -117,6 +107,20 @@ struct Calculator: Calculating {
         } else {
             newValue.removeFirst()
         }
+        if !hasOption {
+            firstValue = newValue
+        } else {
+            secondValue = newValue
+        }
         return newValue
+    }
+}
+
+extension String {
+   func shorted(to symbols: Int) -> String {
+        guard self.count > symbols else {
+            return self
+        }
+        return self.prefix(symbols) + ""
     }
 }

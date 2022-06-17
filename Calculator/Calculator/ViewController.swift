@@ -25,24 +25,26 @@ class ViewController: UIViewController {
             case "+", "-", "x", "/":
                 calc.hasOption = true
                 calc.option = text
+                calc.isFirstNum = true
                 if calc.firstValue.isEmpty {
                     calc.firstValue = "0"
                 } else if !calc.secondValue.isEmpty {
                     calc.exOption = calc.option
                     calc.option = text
                     calc.inMemoryValue = calc.firstValue
-                    calc.firstValue = String(calc.calculate(firstArg: calc.firstValue, secondArg: calc.secondValue))
+                    calc.firstValue = String(format: "%.8f",calc.calculate(firstArg: calc.firstValue, secondArg: calc.secondValue))
                     calc.secondValue = ""
-                    result.text = calc.firstValue
-                } else if !calc.inMemoryValue.isEmpty {
-                    
+                    result.text = calc.firstValue.shorted(to: 10)
                 }
             case "=":
                 if calc.hasOption {
-                    result.text = calc.summaryButtonPressed()
+                    result.text = calc.summaryButtonPressed().shorted(to: 10)
                 } else if !calc.inMemoryValue.isEmpty {
-                    result.text = String(calc.calculate(firstArg: calc.firstValue, secondArg: calc.inMemoryValue))
+                    result.text = String(format: "%.8f",calc.calculate(firstArg: calc.firstValue, secondArg: calc.inMemoryValue))
                 }
+                calc.neg = false
+                calc.secondValue = ""
+                calc.isFirstNum = true
 //                print("=")
             case "AC":
                 calc.cleanButtonPressed()
@@ -58,15 +60,23 @@ class ViewController: UIViewController {
                 result.text = calc.negativeButtonPressed(value: result.text!)
 //                print("negative")
             default:
+                if !calc.isFirstNum && text == "0" && result.text == "0" {
+                    break
+                }
                 if !calc.hasOption {
-                    calc.firstValue = calc.firstValue + text
+                    if calc.firstValue == "0" {
+                        calc.firstValue = ""
+                    }
+                    calc.firstValue = calc.firstValue.shorted(to: 9) + text
                     result.text = calc.firstValue
                     halfScore.text = calc.firstValue
-                    calc.isFirstNum = false
                 } else {
-                    calc.secondValue = calc.secondValue + text
+                    if calc.secondValue == "0" {
+                        calc.secondValue = ""
+                    }
+                    calc.secondValue = calc.secondValue.shorted(to: 9) + text
                     result.text = calc.secondValue
-                    halfScore.text = String(calc.calculate(firstArg: calc.firstValue, secondArg: calc.secondValue))
+                    halfScore.text = String(format: "%.8f", calc.calculate(firstArg: calc.firstValue, secondArg: calc.secondValue)).shorted(to: 10)
                 }
                 calc.isFirstNum = false
                 if calc.error {
